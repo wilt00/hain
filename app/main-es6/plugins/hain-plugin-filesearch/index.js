@@ -6,11 +6,13 @@ const co = require('co');
 
 const path = require('path');
 
+const indexExtensions = ['.exe', '.lnk', '.appref-ms', '.url']
+
 const matchFunc = (filePath, stats) => {
   const ext = path.extname(filePath).toLowerCase();
   if (stats.isDirectory())
     return true;
-  return (ext === '.exe' || ext === '.lnk');
+  return (indexExtensions.includes(ext));
 };
 
 module.exports = (context) => {
@@ -84,7 +86,7 @@ module.exports = (context) => {
     let ratio = 1;
     const ext = path.extname(filePath).toLowerCase();
     const basename = path.basename(filePath).toLowerCase();
-    if (ext !== '.lnk' && ext !== '.exe')
+    if (!indexExtensions.includes(ext))
       ratio *= 0.5;
     if (basename.indexOf('uninstall') >= 0 || basename.indexOf('remove') >= 0)
       ratio *= 0.9;
